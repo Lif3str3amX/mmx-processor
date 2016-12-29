@@ -1,0 +1,11 @@
+<config>
+    <modules>
+        <Mmx_Processor>
+            <active>true</active>
+            <codePool>local</codePool>
+            <depends>
+                <Amasty_Orderattr />
+            </depends>            
+        </Mmx_Processor>
+    </modules>
+</config>

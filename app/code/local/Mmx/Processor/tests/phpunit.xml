@@ -1,0 +1,21 @@
+<!-- http://www.zendcasts.com/unit-testing-with-the-zend-framework-with-zend_test-and-phpunit/2009/06/ -->
+<phpunit bootstrap="bootstrap.php" colors="true">
+    <testsuite name="Zend Framework Unit Testing">
+        <directory>./</directory>
+    </testsuite>
+
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../Helper</directory>
+            <directory suffix=".php">../Model</directory>
+            <exclude>
+                <directory suffix=".xml">../etc</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+
+    <logging>
+        <log type="coverage-html" target="/tmp/mmx_processor/report" charset="UTF-8" yui="true" highlight="true" lowUpperBound="50" highLowerBound="80" />
+        <log type="testdox" target="/tmp/mmx_processor/log/testdox.html" />
+    </logging>
+</phpunit>
