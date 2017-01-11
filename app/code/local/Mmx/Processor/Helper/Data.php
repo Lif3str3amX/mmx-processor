@@ -20,7 +20,7 @@ class Mmx_Processor_Helper_Data extends Mage_Core_Helper_Abstract {
 
         /* @var $quote Mage_Sales_Model_Quote */
         $quote = Mage::getModel('sales/quote')
-                ->setStoreId($customer->getStore()->getId())
+                ->setStoreId($sourceOrder->getStore()->getId())
                 ->assignCustomer($customer);
 
         /* @var $orderItems Mage_Sales_Model_Resource_Order_Item_Collection */
