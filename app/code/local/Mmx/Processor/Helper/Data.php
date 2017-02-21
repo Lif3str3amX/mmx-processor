@@ -47,14 +47,60 @@ class Mmx_Processor_Helper_Data extends Mage_Core_Helper_Abstract {
             }
         }
 
+        /*
         // Set Sales Order Billing Address
         $billingAddress = $quote->getBillingAddress()->addData(array(
             'customer_address_id' => $order->getBillingAddressId()
         ));
+        */
 
+        // http://stackoverflow.com/questions/33823683/magento-order-split-through-observer/33824070#33824070
+        // Set Sales Order Billing Address
+        $billingAddress = $quote->getBillingAddress()->addData(array(
+            'customer_address_id' => '',
+            'prefix' => $order->getBillingAddress()->getPrefix(),
+            'firstname' => $order->getBillingAddress()->getFirstname(),
+            'middlename' => $order->getBillingAddress()->getMiddlename(),
+            'lastname' => $order->getBillingAddress()->getLastname(),
+            'suffix' => $order->getBillingAddress()->getSuffix(),
+            'company' => $order->getBillingAddress()->getCompany(),
+            'street' => $order->getBillingAddress()->getStreetFull(),
+            'city' => $order->getBillingAddress()->getCity(),
+            'region' => $order->getBillingAddress()->getRegion(),
+            'postcode' => $order->getBillingAddress()->getPostcode(),
+            'country_id' => $order->getBillingAddress()->getCountryId(),
+            'email' => $order->getBillingAddress()->getEmail(),
+            'telephone' => $order->getBillingAddress()->getTelephone(),
+            'fax' => $order->getBillingAddress()->getFax(),
+            'save_in_address_book' => 0
+        ));
+        
+        /*
         // Set Sales Order Shipping Address
         $shippingAddress = $quote->getShippingAddress()->addData(array(
             'customer_address_id' => $order->getShippingAddressId()
+        ));
+        */
+        
+        // http://stackoverflow.com/questions/33823683/magento-order-split-through-observer/33824070#33824070
+        // Set Sales Order Shipping Address
+        $shippingAddress = $quote->getShippingAddress()->addData(array(
+            'customer_address_id' => '',
+            'prefix' => $order->getShippingAddress()->getPrefix(),
+            'firstname' => $order->getShippingAddress()->getFirstname(),
+            'middlename' => $order->getShippingAddress()->getMiddlename(),
+            'lastname' => $order->getShippingAddress()->getLastname(),
+            'suffix' => $order->getShippingAddress()->getSuffix(),
+            'company' => $order->getShippingAddress()->getCompany(),
+            'street' => $order->getShippingAddress()->getStreetFull(),
+            'city' => $order->getShippingAddress()->getCity(),
+            'region' => $order->getShippingAddress()->getRegion(),
+            'postcode' => $order->getShippingAddress()->getPostcode(),
+            'country_id' => $order->getShippingAddress()->getCountryId(),
+            'email' => $order->getShippingAddress()->getEmail(),
+            'telephone' => $order->getShippingAddress()->getTelephone(),
+            'fax' => $order->getShippingAddress()->getFax(),
+            'save_in_address_book' => 0
         ));
 
         // Collect Rates and Set Shipping & Payment Method
