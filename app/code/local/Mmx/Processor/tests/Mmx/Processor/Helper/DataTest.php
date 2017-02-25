@@ -16,7 +16,7 @@ class Mmx_Processor_Helper_DataTest extends PHPUnit_Framework_TestCase {
 
     public function setUp() {
         
-        $this->order = Mage::getModel('sales/order')->load(1298); // mixed order containing Indigo, Inbtreservation and Inciena
+        $this->order = Mage::getModel('sales/order')->load(1321); // mixed order containing Indigo, Inbtreservation and Inciena
 
         $this->helper = new Mmx_Processor_Helper_Data();
     }
@@ -24,7 +24,7 @@ class Mmx_Processor_Helper_DataTest extends PHPUnit_Framework_TestCase {
     public function testSplitOrder() {
         
         $newOrder = $this->helper->splitOrder($this->order);
-        $this->assertNotEquals(1298, $newOrder->getId());
+        $this->assertNotEquals(1321, $newOrder->getId());
     }
     
     public function testGetBtIncrementIdBySchemeref() {
