@@ -3,7 +3,7 @@
 class Mmx_Processor_Helper_Data extends Mage_Core_Helper_Abstract {
     
     /**
-     * Copies INCIENABOM/INBTRESERVATION serialised items into a new order
+     * Copies serialised items (e.g. INCIENABOM/INBTRESERVATION) into a new order
      * 
      * @param Mage_Sales_Model_Order $sourceOrder
      * @return Mage_Sales_Model_Order
@@ -29,12 +29,12 @@ class Mmx_Processor_Helper_Data extends Mage_Core_Helper_Abstract {
         /* @var $orderItem Mage_Sales_Model_Order_Item */
         foreach ($orderItems as $orderItem) {
             
-            // Only add INBTRESERVATION and INCIENABOM to this order
-            if (stristr($orderItem->getSku(), 'INBTRESERVATION') || stristr($orderItem->getSku(), 'INCIENABOM')) {
+            // Only add serialised items to this order e.g. INCIENABOM/INBTRESERVATION
+            if ($this->isSerialisedItem($orderItem)) {
 
                 /* @var $product Mage_Catalog_Model_Product */
                 $product = Mage::getModel('catalog/product')->load($orderItem->getProductId());
-
+                
                 try {
                     /* @var $quoteItem Mage_Sales_Model_Quote_Item */
                     $productOptions = $orderItem->getProductOptions(); // copy settings of previous cart item to product
@@ -121,12 +121,12 @@ class Mmx_Processor_Helper_Data extends Mage_Core_Helper_Abstract {
         // Collect Totals & Save Quote
         $quote->collectTotals()->save();
 
+        // Create Order From Quote
+        // http://magento.stackexchange.com/questions/41882/how-can-i-quick-update-of-qty-and-stock-and-all-inventory-fields-in-magento
         try {
-            // Create Order From Quote
             /* @var $service Mage_Sales_Model_Service_Quote */
             $service = Mage::getModel('sales/service_quote', $quote);
 
-            // http://magento.stackexchange.com/questions/41882/how-can-i-quick-update-of-qty-and-stock-and-all-inventory-fields-in-magento
             /* @var $quoteItems Mage_Sales_Model_Quote_Item */
             $quoteItems = $service->getQuote()->getAllItems();
             foreach ($quoteItems as $quoteItem) {
@@ -230,6 +230,40 @@ class Mmx_Processor_Helper_Data extends Mage_Core_Helper_Abstract {
         Mage::log('Got BT increment_id' . $increment_id);
         return $increment_id;
 
-    }    
+    } 
+
+    /**
+     * Determines if a product contains serial numbers without relying on hard-coded SKUs
+     * 
+     * @param Mage_Sales_Model_Order_Item $orderItem
+     * @return boolean
+     */
+    public function isSerialisedItem($orderItem)
+    {
+        $is_serialised_product = false;
+
+        $productOptions = $orderItem->getProductOptions();
+        foreach ($productOptions as $productOption) {
+            foreach ($productOption as $option) {
+                if (isset($option['label'])) {
+                    if ($option['label'] == 'Serial Code') {
+                        $is_serialised_product = true;
+                    }
+                }
+            }
+        }
         
+        return $is_serialised_product;
+    }
+    
+    /*
+    public function isSerialisedItem($product) {
+        if (strtoupper($product->getSku()) == 'INCIENABOM' || strtoupper($product->getSku()) == 'INBTRESERVATION') {    // these are to be displayed in IndigoCienaSalesOrder
+            return true;
+        }
+        else {
+            return false;
+        }
+    }    
+    */
 }

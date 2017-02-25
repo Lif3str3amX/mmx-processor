@@ -145,6 +145,8 @@ class Mmx_Processor_Model_Indigo {
      */
     public function orderContainsIndigoProductsOnly() {
 
+        $helper = new Mmx_Processor_Helper_Data();
+        
         $contains_indigo_products_only = true;
 
         /* @var $orderItems Mage_Sales_Model_Resource_Order_Item_Collection */
@@ -152,7 +154,7 @@ class Mmx_Processor_Model_Indigo {
 
         /* @var $orderItem Mage_Sales_Model_Order_Item */
         foreach ($orderItems as $orderItem) {
-            if (stristr($orderItem->getSku(), 'INBTRESERVATION') || stristr($orderItem->getSku(), 'INCIENABOM')) {
+            if ($helper->isSerialisedItem($orderItem)) {
                 $contains_indigo_products_only = false;
                 break;
             }
@@ -168,6 +170,8 @@ class Mmx_Processor_Model_Indigo {
      */
     public function orderContainsSerialisedProductsOnly() {
         
+        $helper = new Mmx_Processor_Helper_Data();
+
         $contains_serialised_only = true;
 
         /* @var $orderItems Mage_Sales_Model_Resource_Order_Item_Collection */
@@ -175,7 +179,7 @@ class Mmx_Processor_Model_Indigo {
 
         /* @var $orderItem Mage_Sales_Model_Order_Item */
         foreach ($orderItems as $orderItem) {
-            if (!stristr($orderItem->getSku(), 'INBTRESERVATION') && !stristr($orderItem->getSku(), 'INCIENABOM')) {
+            if (!$helper->isSerialisedItem($orderItem)) {
                 $contains_serialised_only = false;
             }
         }
@@ -190,27 +194,25 @@ class Mmx_Processor_Model_Indigo {
      */
     public function orderContainsIndigoAndSerialisedProducts() {
         
+        $helper = new Mmx_Processor_Helper_Data();
+
         $contains_indigo_products = false;
-        $contains_incienabom_products = false;
-        $contains_inbtreservation_products = false;
+        $contains_serialised_products = false;
 
         /* @var $orderItems Mage_Sales_Model_Resource_Order_Item_Collection */
         $orderItems = $this->order->getAllItems();
 
         /* @var $orderItem Mage_Sales_Model_Order_Item */
         foreach ($orderItems as $orderItem) {
-            if (!stristr($orderItem->getSku(), 'INBTRESERVATION') && !stristr($orderItem->getSku(), 'INCIENABOM')) {
+            if (!$helper->isSerialisedItem($orderItem)) {
                 $contains_indigo_products = true;
             }
-            if (stristr($orderItem->getSku(), 'INCIENABOM')) {
-                $contains_incienabom_products = true;
-            }
-            if (stristr($orderItem->getSku(), 'INBTRESERVATION')) {
-                $contains_inbtreservation_products = true;
+            if ($helper->isSerialisedItem($orderItem)) {
+                $contains_serialised_products = true;
             }
         }
 
-        if (($contains_indigo_products && $contains_incienabom_products) || ($contains_indigo_products && $contains_inbtreservation_products)) {
+        if (($contains_indigo_products && $contains_serialised_products)) {
             return true;
         }
         else {
