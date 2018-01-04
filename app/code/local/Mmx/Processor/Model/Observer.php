@@ -21,6 +21,10 @@ class Mmx_Processor_Model_Observer {
                 ->setOrder($order)
                 ->processOrder();
 
+        Mage::getModel('mmx_processor/huawei')
+            ->setOrder($order)
+            ->processOrder();
+
         return true;
     }
 
